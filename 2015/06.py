@@ -2,28 +2,33 @@
 import fileinput
 import re
 
-grid1 = [[0 for _ in range(1000)] for _ in range(1000)]
-grid2 = [[0 for _ in range(1000)] for _ in range(1000)]
+
+def lights(instructions, brightness=False):
+    grid = [[0 for _ in range(1000)] for _ in range(1000)]
+
+    for mode, fx, fy, tx, ty in instructions:
+        for i in range(fx, tx + 1):
+            for j in range(fy, ty + 1):
+                if mode == "turn on":
+                    grid[i][j] = grid[i][j] + 1 if brightness else 1
+                elif mode == "turn off":
+                    grid[i][j] = max(0, grid[i][j] - 1) if brightness else 0
+                else:  # toggle
+                    if brightness:
+                        grid[i][j] += 2
+                    else:
+                        grid[i][j] = 0 if grid[i][j] == 1 else 1
+
+    return sum([sum(row) for row in grid])
+
+
+instructions = []
 
 for line in fileinput.input():
-    g = re.match(
-        r"(?P<state>turn on|turn off|toggle) (?P<fx>\d+),(?P<fy>\d+) through (?P<tx>\d+),(?P<ty>\d+)",  # noqa: E501
-        line,
-    )
-    if not g:
-        pass
+    mode, fx, fy, tx, ty = re.match(
+        r"(turn on|turn off|toggle) (\d+),(\d+) through (\d+),(\d+)", line,
+    ).groups()
+    instructions.append((mode, int(fx), int(fy), int(tx), int(ty)))
 
-    for i in range(int(g.group("fx")), int(g.group("tx")) + 1):
-        for j in range(int(g.group("fy")), int(g.group("ty")) + 1):
-            if g.group("state") == "turn on":
-                grid1[i][j] = 1
-                grid2[i][j] += 1
-            elif g.group("state") == "turn off":
-                grid1[i][j] = 0
-                grid2[i][j] = max(0, grid2[i][j] - 1)
-            else:  # toggle
-                grid1[i][j] = 0 if grid1[i][j] == 1 else 1
-                grid2[i][j] += 2
-
-print(sum([sum(row) for row in grid1]))
-print(sum([sum(row) for row in grid2]))
+print(lights(instructions))
+print(lights(instructions, True))
