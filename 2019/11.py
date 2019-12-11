@@ -45,9 +45,8 @@ def compute(c, white=False):
     base = 0
 
     pm = 0  # paint, move
-    t = [-1, +1]  # -90 left, +90 right,
-    d = [+1j, 1, -1j, -1]  # North, East, South, West
-    di = 0
+    t = [+1j, -1j]  # -90 left, +90 right,
+    d = 0 + 1j
     p = 0 + 0j  # position
     panels = defaultdict(int)
 
@@ -58,13 +57,13 @@ def compute(c, white=False):
         return panels[p]
 
     def output(a):
-        nonlocal pm, di, p
+        nonlocal pm, d, p
         if pm == 0:  # paint
             panels[p] = a
 
         else:  # move
-            di = (di + t[a]) % len(d)
-            p += d[di]
+            d *= t[a]  # rotate
+            p += d
 
         pm = (pm + 1) % 2
 
