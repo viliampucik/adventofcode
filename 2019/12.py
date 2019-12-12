@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 import fileinput
 import re
+from copy import deepcopy
+from math import gcd
 
 
 # reversed comparison
@@ -30,6 +32,27 @@ def simulate(p, v):
     return p, v
 
 
+def cycle(p, v, p_copy, v_copy):
+    # print(p, v, p_copy, v_copy)
+    # return -1
+    s = 0
+    while True:
+        p, v = simulate(p, v)
+        s += 1
+
+        same = True
+        for i in range(len(p)):
+            if p[i] != p_copy[i]:
+                same = False
+                break
+            if v[i] != v_copy[i]:
+                same = False
+                break
+
+        if same:
+            return s
+
+
 p = []  # positions
 v = []  # velocities
 
@@ -38,6 +61,11 @@ for line in fileinput.input():
     p.append(x)
     v.append([0] * len(x))
 
+p_copy = deepcopy(p)
+v_copy = deepcopy(v)
+
+# A
+
 for s in range(1000):
     p, v = simulate(p, v)
 
@@ -45,3 +73,16 @@ e = 0
 for i in range(len(p)):
     e += sum(abs(j) for j in p[i]) * sum(abs(j) for j in v[i])
 print(e)
+
+# B
+
+n = []
+for i in range(len(p_copy[0])):
+    p = [[c[i]] for c in p_copy]
+    v = [[c[i]] for c in v_copy]
+    n.append(cycle(p, v, deepcopy(p), deepcopy(v)))
+
+lcm = n[0]
+for i in n[1:]:
+    lcm = lcm * i // gcd(lcm, i)
+print(lcm)
