@@ -1,14 +1,13 @@
 #!/usr/bin/env python
 import fileinput
-from operator import mul
-from functools import reduce
+from math import prod
 from itertools import combinations
 
 
 def solve(length):
     for c in combinations(n, length):
         if sum(c) == 2020:
-            return reduce(mul, c)
+            return prod(c)
 
 
 n = [int(line.strip()) for line in fileinput.input()]
