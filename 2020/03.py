@@ -6,7 +6,7 @@ from math import prod
 def trees(r_init, d_init, m):
     r, w, t = 0, len(m[0]), 0
 
-    for d in range(d_init, len(m)):
+    for d in range(d_init, len(m), d_init):
         r += r_init
         r %= w
         t += m[d][r] == "#"
