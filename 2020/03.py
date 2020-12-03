@@ -4,12 +4,12 @@ from math import prod
 
 
 def trees(r_init, d_init, m):
-    r, w, t = 0, len(m[0]), 0
+    r, d, w, t = r_init, d_init, len(m[0]), 0
 
-    for d in range(d_init, len(m), d_init):
+    while d < len(m):
+        t += m[d][r % w] == "#"
         r += r_init
-        r %= w
-        t += m[d][r] == "#"
+        d += d_init
 
     return t
 
