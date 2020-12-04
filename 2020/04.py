@@ -12,27 +12,18 @@ fields = {
     "pid": re.compile(r"^\d{9}$"),
 }
 
-count_present = 0
-count_valid = 0
+present = 0
+valid = 0
 
 for line in sys.stdin.read().split("\n\n"):
     passport = dict(l.split(":") for l in line.split())
 
-    # if not passport.keys() >= fields.keys():
-    #     continue
+    if not passport.keys() >= fields.keys():
+        continue
 
-    present = True
-    valid = True
+    present += 1
+    valid += all(data.match(passport[field])
+                       for field, data in fields.items())
 
-    for field, data in fields.items():
-        if field not in passport:
-            present = False
-            break
-        elif data.match(passport[field]) == None:
-            valid = False
-
-    count_present += present
-    count_valid += present and valid
-
-print(count_present)
-print(count_valid)
+print(present)
+print(valid)
