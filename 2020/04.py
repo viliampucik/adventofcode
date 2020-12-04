@@ -16,7 +16,7 @@ count_present = 0
 count_valid = 0
 
 for line in sys.stdin.read().split("\n\n"):
-    passport = {i[:3]: i[4:] for i in line.split()}
+    passport = dict(l.split() for l in line.split())
 
     present = True
     valid = True
