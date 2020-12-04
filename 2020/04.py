@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-import fileinput
+import sys
 import re
 
 fields = {
@@ -12,37 +12,24 @@ fields = {
     "pid": re.compile(r"^\d{9}$"),
 }
 
+count_present = 0
+count_valid = 0
 
-def validate(passport):
+for line in sys.stdin.read().split("\n\n"):
+    passport = {i[:3]: i[4:] for i in line.split()}
+
+    present = True
     valid = True
 
     for field, data in fields.items():
         if field not in passport:
-            return False, False
+            present = False
+            break
         elif data.match(passport[field]) == None:
             valid = False
 
-    return True, valid
-
-
-count_present = 0
-count_valid = 0
-
-passport = dict()
-for line in fileinput.input():
-    entries = dict({i[:3]: i[4:] for i in line.strip().split(" ")})
-    if "" in entries:  # empty line
-        (present, valid) = validate(passport)
-        count_present += present
-        count_valid += valid
-        passport = dict()
-    else:
-        passport |= entries
-
-# last line
-(present, valid) = validate(passport)
-count_present += present
-count_valid += valid
+    count_present += present
+    count_valid += present and valid
 
 print(count_present)
 print(count_valid)
