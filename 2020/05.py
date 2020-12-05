@@ -1,16 +1,9 @@
 #!/usr/bin/env python
 import fileinput
 
-s = set()
+t = str.maketrans("FBLR", "0101")
+s = set(int(l.translate(t), 2) for l in fileinput.input())
+lo, hi = min(s), max(s)
 
-for l in fileinput.input():
-    l = l.strip().replace("F", "0").replace(
-        "B", "1").replace("L", "0").replace("R", "1")
-    s.add(int(l, 2))
-
-print(max(s))
-
-for i in range(min(s) + 1, max(s)):
-    if i not in s:
-        print(i)
-        break
+print(hi)
+print(next(i for i in range(lo + 1, hi) if i not in s))
