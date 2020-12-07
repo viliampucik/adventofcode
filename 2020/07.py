@@ -15,14 +15,8 @@ for line in fileinput.input():
         bags_in[parent][child] = int(count)
         bags_out[child].add(parent)
 
-    if len(children) == 0:
-        bags_in[parent] = None
-
 
 def inside(bags):
-    if bags == None:
-        return 0
-
     c = 0
     for bag, count in bags.items():
         c += count
@@ -32,9 +26,6 @@ def inside(bags):
 
 
 def outside(bags):
-    if len(bags) == 0:
-        return set()
-
     s = bags.copy()
     for bag in bags:
         s.update(outside(bags_out[bag]))
