@@ -7,31 +7,26 @@ bags_in = defaultdict(dict)  # values are bags inside the bag
 bags_out = defaultdict(set)  # values are bags outside of the bag
 
 for line in fileinput.input():
-    parent, children = line.strip().replace("no other bags", "").split("s contain ")
-    children = re.findall(r"\d+ \w+ \w+ bag", children)
-
-    for child in children:
-        count, child = child.split(" ", 1)
+    parent, children = line.split(" bags contain ")
+    for count, child in re.findall(r"(\d+) (\w+ \w+) bags?[,.]", children):
         bags_in[parent][child] = int(count)
         bags_out[child].add(parent)
 
 
-def inside(bags):
+def inside(name):
     c = 0
-    for bag, count in bags.items():
+    for bag, count in bags_in[name].items():
         c += count
-        c += count * inside(bags_in[bag])
-
+        c += count * inside(bag)
     return c
 
 
-def outside(bags):
-    s = bags.copy()
-    for bag in bags:
-        s.update(outside(bags_out[bag]))
-
+def outside(name):
+    s = bags_out[name].copy()
+    for bag in bags_out[name]:
+        s.update(outside(bag))
     return s
 
 
-print(len(outside(bags_out["shiny gold bag"])))
-print(inside(bags_in["shiny gold bag"]))
+print(len(outside("shiny gold")))
+print(inside("shiny gold"))
