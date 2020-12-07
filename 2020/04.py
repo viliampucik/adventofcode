@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import sys
+import re
 
 fields = {
     "byr": lambda x: 1920 <= int(x) <= 2002,
