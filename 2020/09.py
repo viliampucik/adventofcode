@@ -7,7 +7,7 @@ n = [int(x) for x in fileinput.input()]
 invalid = None
 
 for i in range(25, len(n)):
-    if n[i] not in (sum(x) for x in combinations(n[i-25: i], 2)):
+    if n[i] not in map(sum, combinations(n[i-25: i], 2)):
         invalid = n[i]
         break
 
