@@ -1,14 +1,23 @@
 #!/usr/bin/env python
 import fileinput
-from itertools import combinations
+from collections import deque
 
 n = [int(x) for x in fileinput.input()]
 
+# Kudos to https://github.com/jakobsen/advent-of-code-2020/blob/master/09.py
+preamble = deque(n[:25])
 invalid = None
 
-for i in range(25, len(n)):
-    if n[i] not in map(sum, combinations(n[i-25: i], 2)):
-        invalid = n[i]
+for i in n[25:]:
+    seen = set()
+    for j in preamble:
+        if i - j in seen:
+            preamble.popleft()
+            preamble.append(i)
+            break
+        seen.add(j)
+    else:
+        invalid = i
         break
 
 print(invalid)
