@@ -1,10 +1,11 @@
 #!/usr/bin/env pypy3
 import sys
 from collections import defaultdict
+from copy import deepcopy
 
 
-def puzzle(last, seen, number):
-    for i in range(len(seen), number):
+def puzzle(last, seen, stop):
+    for i in range(len(seen), stop):
         if last not in seen or len(seen[last]) == 1:
             last = 0
         else:
@@ -21,5 +22,5 @@ for i, n in enumerate(next(sys.stdin).split(",")):
     last = int(n)
     seen[last].append(i)
 
-print(puzzle(last, seen.copy(), 2020))
-print(puzzle(last, seen.copy(), 30000000))
+print(puzzle(last, deepcopy(seen), 2020))
+print(puzzle(last, deepcopy(seen), 30000000))
