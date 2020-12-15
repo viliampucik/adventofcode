@@ -2,21 +2,11 @@
 import sys
 
 numbers = [int(i) for i in next(sys.stdin).split(",")]
-previous = current = None
-age = {}
+last = numbers[-1]
+age = {number: i+1 for i, number in enumerate(numbers)}
 
-for i in range(30_000_000):
-    if i < len(numbers):
-        current = numbers[i]
-    elif previous not in age:
-        current = 0
-    else:  # previous in age
-        current = i - 1 - age[previous]
+for i in range(len(numbers), 30_000_000):
+    if i == 2020: print(last)
+    age[last], last = i, i - age.get(last, i)
 
-    age[previous] = i - 1
-    previous = current
-
-    if i == 2019:
-        print(current)
-
-print(current)
+print(last)
