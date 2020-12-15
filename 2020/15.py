@@ -1,26 +1,22 @@
 #!/usr/bin/env pypy3
 import sys
-from collections import defaultdict
-from copy import deepcopy
 
+numbers = [int(i) for i in next(sys.stdin).split(",")]
+previous = current = None
+age = {}
 
-def puzzle(last, seen, stop):
-    for i in range(len(seen), stop):
-        if last not in seen or len(seen[last]) == 1:
-            last = 0
-        else:
-            last = seen[last][-1] - seen[last][-2]
+for i in range(30_000_000):
+    if i < len(numbers):
+        current = numbers[i]
+    elif previous not in age:
+        current = 0
+    else:  # previous in age
+        current = i - 1 - age[previous]
 
-        seen[last].append(i)
+    age[previous] = i - 1
+    previous = current
 
-    return last
+    if i == 2019:
+        print(current)
 
-
-last = None
-seen = defaultdict(list)
-for i, n in enumerate(next(sys.stdin).split(",")):
-    last = int(n)
-    seen[last].append(i)
-
-print(puzzle(last, deepcopy(seen), 2020))
-print(puzzle(last, deepcopy(seen), 30000000))
+print(current)
