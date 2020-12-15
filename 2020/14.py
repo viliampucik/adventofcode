@@ -25,9 +25,9 @@ for line in fileinput.input():
         offsets = [
             sum(x)
             for x in powerset([
-                1 << (35 - i)
-                for i, b in enumerate(mask)
-                if b == "X"
+                1 << (35 - i)  # 2 ** (35 - 1)
+                for i, bit in enumerate(mask)
+                if bit == "X"
             ])
         ]
     else:
