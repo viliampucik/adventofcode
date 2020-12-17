@@ -10,7 +10,7 @@ counts = defaultdict(int, {0: 1})
 
 for a, b in zip(addapters[1:], addapters):
     diffs[a - b] += 1
-    # number of ways to reach i'th adapter from (possible) three previous
+    # number of ways to reach i'th adapter from previous three possible ones
     counts[a] = counts[a - 3] + counts[a - 2] + counts[a - 1]
 
 print(diffs[1] * diffs[3])
