@@ -5,13 +5,13 @@ from operator import add, mul
 
 
 def same_precedence(line):
-    opps = {"+": add, "*": mul}
-    ns = line.split()
-    a = int(ns[0])
+    operations = {"+": add, "*": mul}
+    values = line.split()
+    a = int(values[0])
 
-    for i in range(1, len(ns)-1, 2):
-        o = opps[ns[i]]
-        b = int(ns[i + 1])
+    for i in range(1, len(values)-1, 2):
+        o = operations[values[i]]
+        b = int(values[i + 1])
         a = o(a, b)
 
     return a
