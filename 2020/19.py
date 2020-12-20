@@ -2,7 +2,7 @@
 import sys
 import regex
 
-
+# Kudos to https://github.com/taddeus/advent-of-code/blob/master/2020/19_regex.py
 def solve(rules, messages):
     def expand(value):
         if not value.isdigit(): return value
