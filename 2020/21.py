@@ -22,7 +22,7 @@ while len(singles) != len(alg_ings):
     for alg, ings in alg_ings.items():
         if len(ings) > 1:
             ings -= singles
-        else:
+        else:  # len(ings) == 1
             singles |= ings
 
 print(sum(
