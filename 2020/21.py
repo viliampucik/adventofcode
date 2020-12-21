@@ -3,7 +3,7 @@ import sys
 from collections import Counter
 
 ing_counts = Counter()
-alg_ings = {}  # possible allergie -> ingredients candidates
+alg_ings = {}  # possible allergen -> ingredients candidates
 
 for line in sys.stdin.read().splitlines():
     ings, algs = line.split(" (contains ")
