@@ -1,37 +1,37 @@
 #!/usr/bin/env python
 import sys
-from networkx import Graph
-from networkx.algorithms.bipartite.matching import maximum_matching
 from collections import Counter
 
-ingredient_counts = Counter()
-allergens = {}
+ing_counts = Counter()
+alg_ings = {}  # possible allergie -> ingredients candidates
 
 for line in sys.stdin.read().splitlines():
-    food_ingredients, food_allergens = line.split(" (contains ")
-    food_ingredients = food_ingredients.split()
-    food_allergens = food_allergens[:-1].split(", ")
+    ings, algs = line.split(" (contains ")
+    ings, algs = ings.split(), algs[:-1].split(", ")
 
-    ingredient_counts.update(food_ingredients)
+    ing_counts.update(ings)
 
-    for allergen in food_allergens:
-        if allergen in allergens:
-            allergens[allergen] &= set(food_ingredients)
+    for alg in algs:
+        if alg in alg_ings:
+            alg_ings[alg] &= set(ings)
         else:
-            allergens[allergen] = set(food_ingredients)
+            alg_ings[alg] = set(ings)
 
-matching = maximum_matching(Graph(
-    (ingredient, allergen)
-    for allergen, ingredients in allergens.items()
-    for ingredient in ingredients
-))
+singles = set()
+while len(singles) != len(alg_ings):
+    for alg, ings in alg_ings.items():
+        if len(ings) > 1:
+            ings -= singles
+        else:
+            singles |= ings
 
 print(sum(
-    ingredient_counts[ingredient]
-    for ingredient in (ingredient_counts.keys() - matching.keys())
+    count
+    for ing, count in ing_counts.items()
+    if ing not in set.union(*alg_ings.values())
 ))
 
 print(",".join(
-    matching[allergen]
-    for allergen in sorted(allergens)
+    alg_ings[alg].pop()
+    for alg in sorted(alg_ings)
 ))
