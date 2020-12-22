@@ -1,44 +1,37 @@
 #!/usr/bin/env python
 import sys
-from collections import deque
+from math import prod
 
 
-def play(p1, p2, recursive):
-    p1, p2, loop = deque(p1), deque(p2), set()
+# Kudos to https://github.com/hltk/adventofcode/blob/main/2020/22.py
+def game(player1, player2, recursive):
+    seen = set()
 
-    while len(p1) and len(p2):
-        if recursive:  # loop detection
-            decks = (tuple(p1), tuple(p2))
-            if decks in loop:
-                return True, list(p1)
-            else:
-                loop.add(decks)
+    while player1 and player2:
+        if (state := (tuple(player1), tuple(player2))) in seen:
+            return True, player1
+        seen.add(state)
 
-        a, b = p1.popleft(), p2.popleft()
+        (card1, *player1), (card2, *player2) = player1, player2
 
-        if recursive and len(p1) >= a and len(p2) >= b:
-            p1winner = play(list(p1)[:a], list(p2)[:b], recursive)[0]
+        if recursive and len(player1) >= card1 and len(player2) >= card2:
+            player1win = game(player1[:card1], player2[:card2], recursive)[0]
         else:
-            p1winner = a > b
+            player1win = card1 > card2
 
-        if p1winner:
-            p1.extend([a, b])
+        if player1win:
+            player1.extend((card1, card2))
         else:
-            p2.extend([b, a])
+            player2.extend((card2, card1))
 
-    return len(p1) > len(p2), list(p1) + list(p2)
-
-
-def score(p1, p2, recursive):
-    p = play(p1, p2, recursive)[1]
-    print(sum(
-        (len(p) - i) * card
-        for i, card in enumerate(p)
-    ))
+    return (True, player1) if player1 else (False, player2)
 
 
-p1, p2 = sys.stdin.read().split("\n\n")
-p1 = list(map(int, p1.splitlines()[1:]))
-p2 = list(map(int, p2.splitlines()[1:]))
-score(p1, p2, False)
-score(p1, p2, True)
+players = [
+    list(map(int, player.splitlines()[1:]))
+    for player in sys.stdin.read().split("\n\n")
+]
+
+for recursive in False, True:
+    player = game(*players, recursive)[1]
+    print(sum(map(prod, enumerate(reversed(player), 1))))
