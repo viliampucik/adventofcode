@@ -1,16 +1,16 @@
-#!/usr/bin/env python3
+#!/usr/bin/env pypy3
 # Kudos to https://github.com/taddeus/advent-of-code/blob/master/2020/23_cups.py
-def move(cups, moves, pad=len(cups)):
+def move(cups, moves, pad):
     nex = list(range(1, pad + 2))
 
-    for label, next_label in zip(cups, cups[1:] + nex[0]):
+    for label, next_label in zip(cups, cups[1:] + cups[:1]):
         nex[label] = next_label
+
+    nex[0] = cups[0]  # head, points to the current cup
 
     if pad > len(cups):
         nex[-1] = nex[0]
         nex[cups[-1]] = max(cups) + 1
-
-    nex[0] = cups[0]  # head, points to the current cup
 
     for _ in range(moves):
         rem = nex[nex[0]]
@@ -33,6 +33,6 @@ def move(cups, moves, pad=len(cups)):
 
 
 cups = list(map(int, input()))
-print("".join(map(str, move(cups, 100))))
+print("".join(map(str, move(cups, 100, len(cups)))))
 m = move(cups, 10_000_000, 1_000_000)
 print(next(m) * next(m))
