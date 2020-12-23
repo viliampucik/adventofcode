@@ -2,14 +2,15 @@
 # Kudos to https://github.com/taddeus/advent-of-code/blob/master/2020/23_cups.py
 def move(cups, moves, pad=len(cups)):
     nex = list(range(1, pad + 2))
-    for label, next_label in zip(cups, cups[1:]):
+
+    for label, next_label in zip(cups, cups[1:] + nex[0]):
         nex[label] = next_label
-    nex[0] = cups[0]  # head, points to the current cup
+
     if pad > len(cups):
         nex[-1] = nex[0]
         nex[cups[-1]] = max(cups) + 1
-    else:
-        nex[cups[-1]] = nex[0]
+
+    nex[0] = cups[0]  # head, points to the current cup
 
     for _ in range(moves):
         rem = nex[nex[0]]
