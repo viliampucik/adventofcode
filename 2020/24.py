@@ -9,33 +9,29 @@ coordinates = {
     "se": 1-1j, "sw": -1-1j,
 }
 r = re.compile(r"[ns][ew]?|e|w")
-tiles = {}
+tiles = set()  # black tiles only
 
 for line in fileinput.input():
     tile = sum(map(coordinates.__getitem__, r.findall(line)))
-    tiles[tile] = (tiles.get(tile, 0) + 1) % 2
+    if tile in tiles:
+        tiles.remove(tile)
+    else:
+        tiles.add(tile)
 
-print(sum(tiles.values()))
+print(len(tiles))
 
-for d in range(100):
-    neighbors = {
-        neighbor: 0
-        for tile in tiles
-        for coordinate in coordinates.values()
-        if (neighbor := (tile + coordinate)) not in tiles # Python 3.8
+for _ in range(100):
+    neighbors = defaultdict(int)
+
+    for tile in tiles:
+        for coordinate in coordinates.values():
+            # possibility of a future neighbor
+            neighbors[tile + coordinate] += 1
+
+    tiles = {
+        neighbor
+        for neighbor, count in neighbors.items()
+        if count == 2 or (count == 1 and neighbor in tiles)
     }
 
-    tiles |= neighbors  # Python 3.9+
-
-    new_tiles = {}
-
-    for tile, color in tiles.items():
-        blacks = sum(
-            tiles.get(tile + coordinate, 0)
-            for coordinate in coordinates.values()
-        )
-        new_tiles[tile] = int(blacks == 2 or (blacks == 1 and color == 1))
-
-    tiles = new_tiles
-
-print(sum(tiles.values()))
+print(len(tiles))
