@@ -4,9 +4,9 @@ import fileinput
 from collections import Counter
 
 coordinates = {
-    "ne": 1+1j, "nw": -1+1j,
-     "e": 2,     "w": -2,
-    "se": 1-1j, "sw": -1-1j,
+    "ne": 0+1j, "nw": -1+1j,
+    "e":  1+0j, "w":  -1+0j,
+    "se": 1-1j, "sw":  0-1j,
 }
 r = re.compile("|".join(coordinates))
 tiles = set()  # black tiles only
