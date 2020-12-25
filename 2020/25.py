@@ -10,7 +10,8 @@ babies = {pow(subject, j, modulus): j for j in range(n + 1)}
 # Fermat’s Little Theorem
 fermat = pow(subject, n * (modulus - 2), modulus)
 
-while (card := (card * fermat) % modulus) not in babies.keys():
+while card not in babies.keys():
     loop += 1
+    card = (card * fermat) % modulus
 
 print(pow(door, loop * n + babies[card], modulus))
