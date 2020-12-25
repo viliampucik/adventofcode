@@ -1,17 +1,11 @@
-#!/usr/bin/env pypy3
+#!/usr/bin/env python
 import sys
 
 keys = list(map(int, sys.stdin.read().splitlines()))
-subject = 7
-value = loop = 1
-modulo = 20201227
+subject, modulus, value, loop = 7, 20201227, 1, 1
 
-while True:
-    value = (value * subject) % modulo
-    if value in keys:
-        break
+while (value := (value * subject) % modulus) not in keys:
     loop += 1
 
 subject = keys[keys.index(value) - 1]  # use the next key
-
-print(pow(subject, loop, modulo))
+print(pow(subject, loop, modulus))
