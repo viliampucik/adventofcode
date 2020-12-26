@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 import fileinput
 import re
-from collections import defaultdict
+from collections import defaultdict, deque
+from functools import cache
 
 bags_in = defaultdict(dict)  # values are bags inside the bag
 bags_out = defaultdict(set)  # values are bags outside of the bag
@@ -13,14 +14,15 @@ for line in fileinput.input():
         bags_out[child].add(parent)
 
 
+@cache
 def inside(name):
-    c = 0
-    for bag, count in bags_in[name].items():
-        c += count
-        c += count * inside(bag)
-    return c
+    return sum(
+        count + count * inside(bag)
+        for bag, count in bags_in[name].items()
+    )
 
 
+@cache
 def outside(name):
     s = bags_out[name].copy()
     for bag in bags_out[name]:
@@ -30,3 +32,32 @@ def outside(name):
 
 print(len(outside("shiny gold")))
 print(inside("shiny gold"))
+
+# Nonrecursive alternatives, faster then non-cached recursive ones, but slower than cached ones
+
+def search_inside(name):
+    colors, total = deque([(name, 1)]), -1  # compensate the total count for the "name" bag itself
+
+    while colors:
+        color, multiplier = colors.pop()
+        total += multiplier
+        for child, count in bags_in[color].items():
+            colors.appendleft((child, multiplier * count))
+
+    return total
+
+
+def search_outside(name):
+    colors, parents = deque([name]), set()
+
+    while colors:
+        for parent in bags_out[colors.pop()]:
+            if parent not in parents:
+                parents.add(parent)
+                colors.appendleft(parent)
+
+    return len(parents)
+
+
+print(search_outside("shiny gold"))
+print(search_inside("shiny gold"))
