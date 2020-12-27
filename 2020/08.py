@@ -2,39 +2,40 @@
 import fileinput
 
 
-def run(code, j=None):
-    accumulator, i, visited = 0, 0, set()
-
+def run(code, visited, accumulator=0, i=0):
     while i not in visited and i < len(code):
-        visited.add(i)
+        visited[i] = accumulator
         operation, number = code[i]
-
-        if i == j:  # the place to replace nop with jmp and vice versa
-            operation = "nop" if operation == "jmp" else "jmp"
 
         if operation == "acc":
             accumulator += number
-            i += 1
         elif operation == "jmp":
-            i += number
-        else:  # nop
-            i += 1
+            i += number - 1
 
-    return accumulator, i, visited
+        i += 1
+
+    return accumulator, i
 
 
-code = []
+code, visited = [], {}
 
 for line in fileinput.input():
     operation, number = line.split()
     code.append((operation, int(number)))
 
-accumulator, _, visited = run(code)
+accumulator, _ = run(code, visited)
 print(accumulator)  # 1st part
 
-for j in visited:
-    if code[j][0] in ("nop", "jmp"):
-        accumulator, i, _ = run(code, j)
+# Get a copy of the initial visited instrunctions
+# because run() modifies the dict by accumulating
+# newly visited instructions to prevent further loops
+for j in set(visited.keys()):
+    operation, number = code[j]
+    # Skip instructions that would still continue the initial loop
+    if (operation == "nop" and (i := j + number) not in visited) or \
+       (operation == "jmp" and (i := j + 1) not in visited):
+       # To speed things up continue just from the next instruction with restored state
+        accumulator, i = run(code, visited, visited[j], i)
         if i >= len(code):
             print(accumulator)  # 2nd part
             break
