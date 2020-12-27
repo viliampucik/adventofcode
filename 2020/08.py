@@ -26,15 +26,16 @@ for line in fileinput.input():
 accumulator, _ = run(code, visited)
 print(accumulator)  # 1st part
 
+# Non-brute force approach:
 # Get a copy of the initial visited instrunctions
 # because run() modifies the dict by accumulating
 # newly visited instructions to prevent further loops
 for j in set(visited.keys()):
     operation, number = code[j]
-    # Skip instructions that would still continue the initial loop
+    # Skip instructions that would still continue in loop(s)
     if (operation == "nop" and (i := j + number) not in visited) or \
        (operation == "jmp" and (i := j + 1) not in visited):
-       # To speed things up continue just from the next instruction with restored state
+       # And continue just from the next instruction with restored state
         accumulator, i = run(code, visited, visited[j], i)
         if i >= len(code):
             print(accumulator)  # 2nd part
