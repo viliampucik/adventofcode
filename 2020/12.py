@@ -19,7 +19,7 @@ def solve(instructions, waypoint=1+0j):
         else:
             position += actions[action] * value
 
-    return abs(position.real) + abs(position.imag)
+    return int(abs(position.real) + abs(position.imag))
 
 
 instructions = [(line[0], int(line[1:])) for line in fileinput.input()]
