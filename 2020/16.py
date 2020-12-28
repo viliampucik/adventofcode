@@ -25,7 +25,7 @@ for ticket in nearby_tickets.splitlines()[1:]:
             for i, (_, lo1, hi1, lo2, hi2) in enumerate(rules)
             if lo1 <= number <= hi1 or lo2 <= number <= hi2
         )
-        if len(matching_rules) == 0:
+        if not matching_rules:
             error_rate += number
             valid_ticket = False
         elif valid_ticket:
@@ -39,8 +39,8 @@ print(error_rate)
 
 total = 1
 singles = set()
-your_ticket = [int(number)
-               for number in your_ticket.splitlines()[-1].split(",")]
+your_ticket = list(map(int, your_ticket.splitlines()[-1].split(",")))
+
 while len(singles) != rules_count:
     for i, col in enumerate(cols):
         if len(col) > 1:
