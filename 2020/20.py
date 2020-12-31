@@ -1,141 +1,144 @@
 #!/usr/bin/env python
-import numpy as np
+import re
 import sys
-from collections import deque, defaultdict
-from itertools import combinations
-from math import prod, sqrt
-from random import choice
+from math import prod
+from operator import itemgetter
 
-tiles = {}
-raw_tiles = sys.stdin.read().strip().split("\n\n")
-w = int(sqrt(len(raw_tiles)))
 
-for tile in raw_tiles:
-    name, *lines = tile.replace(".", "0").replace("#", "1").splitlines()
+def add(tiles, borders, name, lines, include_flipped=True):
+    top, bottom = lines[0], lines[-1]
+    left, right = "".join(map(itemgetter(0), lines)), "".join(map(itemgetter(-1), lines))
 
-    top, bottom, left, right = lines[0], lines[-1], "", ""
-    for line in lines:
-        left += line[0]
-        right += line[-1]
+    tile_borders = {}
 
-    tiles[int(name[5:-1])] = set((
-        int(top, 2),
-        int(bottom, 2),
-        int(left, 2),
-        int(right, 2),
-        int(top[::-1], 2),
-        int(bottom[::-1], 2),
-        int(left[::-1], 2),
-        int(right[::-1], 2),
-    ))
+    # Start with flipped sides first. If non-flipped side mirrors its flipped side,
+    # the later with overwrite the previous.
+    if include_flipped:
+        tile_borders |= {
+            top[::-1]:    (TOP,    LR_FLIP),  # flipped
+            bottom[::-1]: (BOTTOM, LR_FLIP),  # flipped
+            left[::-1]:   (LEFT,   TB_FLIP),  # flipped
+            right[::-1]:  (RIGHT,  TB_FLIP),  # flipped
+        }
 
-matching_sides = defaultdict(int)
+    tile_borders |= {
+        top:    (TOP,    NO_FLIP),
+        bottom: (BOTTOM, NO_FLIP),
+        left:   (LEFT,   NO_FLIP),
+        right:  (RIGHT,  NO_FLIP),
+    }
 
-for a, b in combinations(tiles.keys(), 2):
-    matches = len(tiles[a] & tiles[b])
-    matching_sides[a] += matches
-    matching_sides[b] += matches
+    tiles[name], borders[name] = lines, tile_borders
 
-corners = sorted(matching_sides, key=matching_sides.get)[:4]
-print(prod(corners))
 
-for tile in raw_tiles:
-    name, *lines = tile.replace(".", "0").replace("#", "1").splitlines()
-    tiles[int(name[5:-1])] = np.array(
-        [int(x) for x in "".join(lines)]
-    ).reshape(10, -1)
+def transform(tiles, borders, name, matching_border, matching_side):
+    lines, (orientation, flip) = tiles[name], borders[name][matching_border]
 
-search = deque(tiles.keys())
-last_name = search.pop()
+    if flip == TB_FLIP:
+        lines = tb_flip(lines)
+    elif flip == LR_FLIP:
+        lines = lr_flip(lines)
 
-picture = {0+0j: last_name}
-used_tiles = {last_name: 0+0j}
-top_left = 0+0j
+    if destination := orientation + matching_side:  # != +0+0j
+        if destination in [2 * TOP, 2 * BOTTOM]:
+            lines = tb_flip(lines)
+        elif destination in [2 * LEFT, 2 * RIGHT]:
+            lines = lr_flip(lines)
+        elif orientation.real:
+            lines = l_rotate(lines)
+            if orientation.real == matching_side.imag:
+                lines = tb_flip(lines)
+        else:  # orientation.imag
+            lines = r_rotate(lines)
+            if orientation.imag == matching_side.real:
+                lines = lr_flip(lines)
 
-loop = len(search)  # stupid loop detection
+    add(tiles, borders, name, lines, False)
 
-while len(search):
-    name = search.pop()
-    tile = tiles[name]
-    last_tile = tiles[last_name]
+    if matching_border in borders[name]:
+        del borders[name][matching_border]
 
-    found = False
 
-    for _ in range(2):  # no flip, flip
-        for _ in range(4):  # 4x left rotations
-            if np.array_equal(last_tile[0], tile[-1]):  # tile on top
-                position = used_tiles[last_name] + 1j
-                found = True
-            elif np.array_equal(last_tile[-1], tile[0]):  # tile at bottom
-                position = used_tiles[last_name] - 1j
-                found = True
-            elif np.array_equal(last_tile[:, 0], tile[:, -1]):  # tile on left
-                position = used_tiles[last_name] - 1
-                found = True
-            elif np.array_equal(last_tile[:, -1], tile[:, 0]):  # tile on right
-                position = used_tiles[last_name] + 1
-                found = True
+NO_FLIP, LR_FLIP, TB_FLIP = range(3)
+TOP, BOTTOM, LEFT, RIGHT = 1j, -1j, -1, 1
 
-            if found:
-                break
-            tile = np.rot90(tile)  # nothing found before another rotation
+tb_flip = lambda lines: list(reversed(lines))
+lr_flip = lambda lines: [line[::-1] for line in lines]
+l_rotate = lambda lines: list(map("".join, reversed(list(zip(*lines)))))
+r_rotate = lambda lines: list(map("".join, zip(*reversed(lines))))
+hashes = lambda matrix: sum(row.count("#") for row in matrix)
 
-        if found:
-            break
-        tile = np.fliplr(tile)
+tiles, borders = {}, {}
 
-    if found:
-        loop = len(search)
-        picture[position] = name
-        used_tiles[name] = position
-        tiles[name] = tile  # store back probably rotated or flipped tile
-        last_name = name
+for tile in sys.stdin.read().strip().split("\n\n"):
+    name, *lines = tile.splitlines()
+    add(tiles, borders, int(name[-5:-1]), lines)
 
-        if (top_left.real >= position.real and top_left.imag < position.imag) or \
-           (top_left.real > position.real and top_left.imag <= position.imag):
-            # print(top_left, position, top_left.real > position.real and top_left.imag < position.imag)
-            top_left = position
-    else:
-        search.appendleft(name)
-        loop -= 1
-        if loop <= 0:
-            loop = len(search)
-            # pick randomly a differed last_name from working used_tiles to break the loop
-            last_name = choice(list(used_tiles.keys()))
+stack = set(borders.keys())
+center = stack.pop()  # Pick a random tile as a center
+image = {+0+0j: center}
+tile_size = len(tiles[center])
+add(tiles, borders, center, tiles[center], False) # And assume it does not need flipping
 
-# remove borders
-for name, tile in tiles.items():
-    tiles[name] = tile[1:-1, 1:-1]
+min_row = max_row = min_col = max_col = 0
 
-image = np.hstack([
-    np.vstack([
-        tiles[picture[row+col*1j]]
-        for col in range(int(top_left.imag), int(top_left.imag) - w, -1)
-    ])
-    for row in range(int(top_left.real), int(top_left.real) + w)
-])
-image_water = image.sum()
+while stack:
+    candidate = stack.pop()
 
-monster = np.array(
-    [int(x) for x in "                  # #    ##    ##    ### #  #  #  #  #  #   ".replace(" ", "0").replace("#", "1")]
-).reshape(3, -1)
-monster_water = monster.sum()
-
-for a in range(2):  # no flip, flip
-    for b in range(4):  # 4 rotations
-        monster_count = 0
-        for row in range(image.shape[0] - monster.shape[0] + 1):
-            for col in range(image.shape[1] - monster.shape[1] + 1):
-                s = np.bitwise_and(
-                    image[row:row + monster.shape[0], col:col + monster.shape[1]],
-                    monster
-                ).sum()
-                monster_count += s == monster.sum()
-        
-        if monster_count:
-            print(image.sum() - monster_count * monster.sum())
-            quit()
+    for position, source in image.items():
+        if match := borders[source].keys() & borders[candidate].keys():
             break
 
-        image = np.rot90(image)
-    image = np.fliplr(image)
+    if not match:
+        stack.add(candidate)
+        continue
+
+    matching_border = match.pop()  # Unpack the first (and only) matching border
+    matching_side = borders[source][matching_border][0]
+
+    position += matching_side
+    image[position] = candidate
+
+    min_row, max_row = min(min_row, int(position.imag)), max(max_row, int(position.imag))
+    min_col, max_col = min(min_col, int(position.real)), max(max_col, int(position.real))
+
+    transform(tiles, borders, candidate, matching_border, matching_side)
+    del borders[source][matching_border]
+
+print(prod(
+    image[c + r * 1j]
+    for r in (min_row, max_row)
+    for c in (min_col, max_col)
+))
+
+grid = [
+    "".join(
+        tiles[image[col + row * 1j]][i][1:-1]
+        for col in range(min_col, max_col + 1)
+    )
+    for row in range(max_row, min_row-1, -1)
+    for i in range(1, tile_size-1)
+]
+
+monster = (
+    "                  # ",
+    "#    ##    ##    ###",
+    " #  #  #  #  #  #   ",
+)
+padding = len(grid[0]) - len(monster[0]) + len("\n")
+# Regex search is elegant and fast, however because of overlapping strings
+# lookahead approach needs to be used
+r = re.compile(
+    "(?=(" + f".{{{padding}}}".join(monster).replace(" ", ".") + "))",
+    re.DOTALL
+)
+
+monsters = 0
+
+for _ in range(2):  # no flip, flip
+    for _ in range(4):  # 4 rotations
+        monsters = max(monsters, len(r.findall("\n".join(grid))))
+        grid = r_rotate(grid)  # or l_rotate
+    grid = lr_flip(grid)  # or tb_flip
+
+print(hashes(grid) - hashes(monster) * monsters)
