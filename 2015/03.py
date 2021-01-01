@@ -1,30 +1,15 @@
 #!/usr/bin/env python
-import fileinput
 
-str = next(fileinput.input()).strip()
+o = {"^": 1j, "v": -1j, ">": 1, "<": -1}
+location, locations = 0, [0, 0]
+houses1, houses2 = set((location,)), set(locations)
 
-d = {"<": -1, ">": +1, "^": +1j, "v": -1j}
+for i, c in enumerate(input()):
+    location += o[c]
+    houses1.add(location)
 
-# 1
-s = 0
-houses = {s}
+    locations[i % 2] += o[c]
+    houses2.update(locations)
 
-for p in str:
-    s += d[p]
-    houses.add(s)
-
-print(len(houses))
-
-# 2
-s, r = 0, 0
-houses = {s, r}
-
-for i, p in enumerate(str):
-    if i % 2 == 0:
-        s += d[p]
-        houses.add(s)
-    else:
-        r += d[p]
-        houses.add(r)
-
-print(len(houses))
+print(len(houses1))
+print(len(houses2))
