@@ -1,18 +1,21 @@
 #!/usr/bin/env python
-import sys
-from itertools import count
 from hashlib import md5
+from itertools import count
 
-h5, h6 = None, None
+key, h5, h6 = input(), 0, 0
 
 for i in count(1):
-    hash = md5((sys.argv[1] + str(i)).encode("ascii")).hexdigest()
-    if hash[:5] == "00000" and h5 is None:
-        h5 = i
-    if hash[:6] == "000000" and h6 is None:
-        h6 = i
-    if h5 and h6:
-        break
+    h = md5(f"{key}{i}".encode()).hexdigest()
+    # The nested conditions speed up evaluation
+    if h.startswith("00000"):
+        if not h5:
+            h5 = i
+            if h6:
+                break
+        if not h6 and h.startswith("000000"):
+            h6 = i
+            if h5:
+                break
 
 print(h5)
 print(h6)
