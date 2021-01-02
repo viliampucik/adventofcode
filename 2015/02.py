@@ -3,7 +3,7 @@ import sys
 
 paper = ribbon = 0
 
-for line in sys.stdin.read().splitlines():
+for line in sys.stdin:
     a, b, c = sorted(map(int, line.split("x")))
     paper += 2 * (a * b + b * c + c * a) + a * b
     ribbon += 2 * (a + b) + a * b * c
