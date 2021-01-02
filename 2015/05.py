@@ -1,23 +1,19 @@
 #!/usr/bin/env python
-import fileinput
 import re
+import sys
 
-nice1, nice2 = 0, 0
+r1 = re.compile(
+    r"^" \
+    r"(?=(.*[aeiou]){3})" \
+    r"(?=.*(?P<twin>.)(?P=twin))" \
+    r"(?!.*(ab|cd|pq|xy))"
+)
+r2 = re.compile(
+    r"^" \
+    r"(?=.*(?P<twins>..).*(?P=twins))" \
+    r"(?=.*(?P<repeat>.).(?P=repeat))"
+)
 
-for line in fileinput.input():
-    vowels = re.findall(r"[aeiou]", line)
-    repeats = re.search(r"(.)\1", line)
-    blacklist = re.search(r"ab|cd|pq|xy", line)
-
-    if vowels and len(vowels) >= 3 and repeats and not blacklist:
-        nice1 += 1
-
-    nonoverlap_repeats = re.search(r"(..).*\1", line)
-    between_repeats = re.search(r"(.).\1", line)
-
-    if nonoverlap_repeats and between_repeats:
-        nice2 += 1
-
-
-print(nice1)
-print(nice2)
+lines = sys.stdin.read().splitlines()
+for r in r1, r2:
+    print(sum(bool(r.search(line)) for line in lines))
