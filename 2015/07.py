@@ -1,26 +1,34 @@
 #!/usr/bin/env python
-import fileinput
-from collections import defaultdict
-import re
+import sys
+from functools import cache
 
-w = defaultdict(int)
-kit = {
-    r"^(\d+) -> (\w+)$": r'w["\2"] = \1',
-    r"^(\w+) AND (\w+) -> (\w+)$": r'w["\3"] = w["\1"] & w["\2"]',
-    r"^(\w+) OR (\w+) -> (\w+)$": r'w["\3"] = w["\1"] | w["\2"]',
-    r"^(\w+) LSHIFT (\d+) -> (\w+)$": r'w["\3"] = w["\1"] << \2',
-    r"^(\w+) RSHIFT (\d+) -> (\w+)$": r'w["\3"] = w["\1"] >> \2',
-    r"NOT (\w+) -> (\w+)": r'w["\2"] = ~ w["\1"]',
-}
 
-for line in fileinput.input():
-    line = line.strip()
+@cache
+def solve(wire):
+    signal = []
 
-    for p, r in kit.items():
-        s, c = re.subn(p, r, line)
-        if c:
-            # print(s)
-            exec(s)
-            break
+    for instruction in wires[wire]:
+        if instruction.isdigit() or instruction in ["&", "|", "~", "<<", ">>"]:
+            signal.append(instruction)
+        else:
+            signal.append(solve(instruction))
 
-print(w)
+    return str(eval(" ".join(signal)) & 65535)
+
+
+wires = {}
+
+for line in sys.stdin:
+    instructions, wire = line.strip().split(" -> ")
+    wires[wire] = instructions \
+        .replace("AND", "&") \
+        .replace("OR", "|") \
+        .replace("NOT", "~") \
+        .replace("LSHIFT", "<<") \
+        .replace("RSHIFT", ">>") \
+        .split()
+
+print(a := solve("a"))
+wires["b"] = [a]
+solve.cache_clear()
+print(solve("a"))
