@@ -5,30 +5,32 @@ from functools import cache
 
 @cache
 def solve(wire):
-    signal = []
+    if wire.isdigit():
+        return int(wire)
 
-    for instruction in wires[wire]:
-        if instruction.isdigit() or instruction in ["&", "|", "~", "<<", ">>"]:
-            signal.append(instruction)
-        else:
-            signal.append(solve(instruction))
+    ins = wires[wire]
 
-    return str(eval(" ".join(signal)) & 65535)
+    if "AND" in ins:
+        return solve(ins[0]) & solve(ins[2])
+    elif "OR" in ins:
+        return solve(ins[0]) | solve(ins[2])
+    elif "NOT" in ins:
+        return ~ solve(ins[1]) & 65535
+    elif "LSHIFT" in ins:
+        return solve(ins[0]) << solve(ins[2])
+    elif "RSHIFT" in ins:
+        return solve(ins[0]) >> solve(ins[2])
+    else:
+        return solve(ins[0])
 
 
 wires = {}
 
 for line in sys.stdin:
-    instructions, wire = line.strip().split(" -> ")
-    wires[wire] = instructions \
-        .replace("AND", "&") \
-        .replace("OR", "|") \
-        .replace("NOT", "~") \
-        .replace("LSHIFT", "<<") \
-        .replace("RSHIFT", ">>") \
-        .split()
+    ins, wire = line.strip().split(" -> ")
+    wires[wire] = ins.split()
 
 print(a := solve("a"))
-wires["b"] = [a]
+wires["b"] = [str(a)]
 solve.cache_clear()
 print(solve("a"))
