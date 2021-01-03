@@ -20,11 +20,11 @@ def solve(wire):
 
 
 ops = {"AND": iand, "OR": ior, "RSHIFT": rshift, "LSHIFT": lshift}
-wires = {}
-
-for line in sys.stdin:
-    ins, wire = line.strip().split(" -> ")
-    wires[wire] = ins.split()
+wires = {
+    wire: ins.split()
+    for line in sys.stdin
+    for ins, wire in [line.strip().split(" -> ")]
+}
 
 print(a := solve("a"))
 wires["b"] = [str(a)]
