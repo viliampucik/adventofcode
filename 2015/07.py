@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import sys
 from functools import cache
+from operator import iand, ior, lshift, rshift
 
 
 @cache
@@ -10,20 +11,15 @@ def solve(wire):
 
     ins = wires[wire]
 
-    if "AND" in ins:
-        return solve(ins[0]) & solve(ins[2])
-    elif "OR" in ins:
-        return solve(ins[0]) | solve(ins[2])
-    elif "NOT" in ins:
+    if len(ins) == 3:
+        return ops[ins[1]](solve(ins[0]), solve(ins[2]))
+    elif len(ins) == 2:
         return ~ solve(ins[1]) & 65535
-    elif "LSHIFT" in ins:
-        return solve(ins[0]) << solve(ins[2])
-    elif "RSHIFT" in ins:
-        return solve(ins[0]) >> solve(ins[2])
     else:
         return solve(ins[0])
 
 
+ops = {"AND": iand, "OR": ior, "RSHIFT": rshift, "LSHIFT": lshift}
 wires = {}
 
 for line in sys.stdin:
