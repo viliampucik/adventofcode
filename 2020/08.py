@@ -33,8 +33,10 @@ print(accumulator)  # 1st part
 for j in set(visited.keys()):
     operation, number = code[j]
     # Skip instructions that would still continue in loop(s)
+    # fmt: off
     if (operation == "nop" and (i := j + number) not in visited) or \
        (operation == "jmp" and (i := j + 1) not in visited):
+    # fmt: on
        # And continue just from the next instruction with restored state
         accumulator, i = run(code, visited, visited[j], i)
         if i >= len(code):

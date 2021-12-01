@@ -2,6 +2,7 @@
 # Kudos to https://github.com/taddeus/advent-of-code/blob/master/2020/23_cups.py
 from array import array
 
+
 def move(cups, moves, pad):
     nex = array("I", range(1, pad + 2))
 

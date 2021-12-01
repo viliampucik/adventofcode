@@ -15,9 +15,7 @@ s = 0
 nos = None
 
 for line in fileinput.input():
-    name, sector, checksum = re.match(
-        r"^(.*)-(\d+)\[(.+)\]$", line.strip()
-    ).groups()
+    name, sector, checksum = re.match(r"^(.*)-(\d+)\[(.+)\]$", line.strip()).groups()
     sector = int(sector)
 
     if "northpole" in "".join([descrypt(c, sector) for c in name]):

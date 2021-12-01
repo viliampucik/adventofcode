@@ -4,9 +4,11 @@ from math import prod
 
 timestamp, busses = sys.stdin.read().splitlines()
 timestamp, busses = int(timestamp), {
+    # fmt: off
     i: int(bus)
     for i, bus in enumerate(busses.split(","))
     if bus != "x"
+    # fmt: on
 }
 
 print(prod(min((-timestamp % bus, bus) for bus in busses.values())))

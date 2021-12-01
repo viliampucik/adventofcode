@@ -21,9 +21,11 @@ for ticket in nearby_tickets.splitlines()[1:]:
 
     for number in map(int, ticket.split(",")):
         matching_rules = set(
+            # fmt: off
             i
             for i, (_, lo1, hi1, lo2, hi2) in enumerate(rules)
             if lo1 <= number <= hi1 or lo2 <= number <= hi2
+            # fmt: on
         )
         if not matching_rules:
             error_rate += number

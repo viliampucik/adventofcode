@@ -16,11 +16,13 @@ def game(player1, player2, recursive):
 
         if recursive and len(player1) >= card1 and len(player2) >= card2:
             cards1, cards2 = player1[:card1], player2[:card2]
+            # fmt: off
             if (cards1_max := max(cards1)) > max(cards2) and \
                (cards1_max > (len(cards1) + len(cards2) - 2)):
                 player1win = True
             else:
                 player1win = game(cards1, cards2, recursive)[0]
+            # fmt: on
         else:
             player1win = card1 > card2
 
@@ -33,8 +35,10 @@ def game(player1, player2, recursive):
 
 
 players = [
+    # fmt: off
     list(map(int, player.splitlines()[1:]))
     for player in sys.stdin.read().split("\n\n")
+    # fmt: on
 ]
 
 for recursive in False, True:

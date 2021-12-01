@@ -12,9 +12,9 @@ def solve(password):
 
         prefix = password[:-i]
 
-        for suffix in product(letters[letters.index(password[-i]) + 1:], *([letters] * (i-1))):
+        for suffix in product(letters[letters.index(password[-i]) + 1 :], *([letters] * (i - 1))):
             candidate = prefix + "".join(suffix)
-            if r.search(candidate) and any(candidate[j:j+3] in triplets for j in range(len(candidate) - 2)):
+            if r.search(candidate) and any(candidate[j : j + 3] in triplets for j in range(len(candidate) - 2)):
                 found = candidate
                 break
 
@@ -25,10 +25,7 @@ def solve(password):
 
 
 letters = "abcdefghjkmnpqrstuvwxyz"
-triplets = set(
-    "".join(triplet)
-    for triplet in zip(letters, letters[1:], letters[2:])
-)
+triplets = set("".join(triplet) for triplet in zip(letters, letters[1:], letters[2:]))
 r = re.compile(rf"([{letters}])\1.*([{letters}])\2")
 
 print(password := solve(input()))
