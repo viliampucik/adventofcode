@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import fileinput
 
-aim, h, d = 0, 0, 0
+aim = h = d = 0
 
 for l in fileinput.input():
     cmd, x = l.strip().split()
