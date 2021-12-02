@@ -4,7 +4,7 @@ import fileinput
 aim, h, d = 0, 0, 0
 
 for l in fileinput.input():
-    cmd, x = l.strip().split(" ")
+    cmd, x = l.strip().split()
     x = int(x)
     # fmt: off
     if cmd == "down": aim += x
