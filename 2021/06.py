@@ -9,7 +9,6 @@ for i in map(int, sys.stdin.read().split(",")):
 
 for part in (80, 256 - 80):
     for _ in range(part):
-        c = d.popleft()
-        d[6] += c
-        d.append(c)
+        d.append(d.popleft())
+        d[6] += d[-1]
     print(sum(d))
