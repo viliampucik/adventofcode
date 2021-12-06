@@ -9,6 +9,6 @@ for i in map(int, sys.stdin.read().split(",")):
 
 for part in (80, 256 - 80):
     for _ in range(part):
-        d.append(d.popleft())
+        d.rotate(-1)
         d[6] += d[-1]
     print(sum(d))
