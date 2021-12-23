@@ -1,11 +1,10 @@
 #!/usr/bin/env python
 from collections import defaultdict
-import fileinput
 import re
 
 c, r, v = defaultdict(int), re.compile(r"\d+"), []
 
-for l in fileinput.input():
+for l in open(0).read().splitlines():
     x1, y1, x2, y2 = map(int, r.findall(l))
     v.append((complex(x1, y1), complex(x2, y2)))
 

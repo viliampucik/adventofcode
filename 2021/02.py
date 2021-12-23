@@ -1,10 +1,7 @@
 #!/usr/bin/env python
-import fileinput
-
 aim = h = d = 0
 
-for l in fileinput.input():
-    cmd, x = l.strip().split()
+for cmd, x in map(str.split, open(0).read().splitlines()):
     x = int(x)
     # fmt: off
     if cmd == "down": aim += x

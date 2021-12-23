@@ -1,14 +1,13 @@
 #!/usr/bin/env python
 from collections import deque
-import fileinput
 
 pairs = {"(": ")", "[": "]", "{": "}", "<": ">"}
 points = {")": 3, "]": 57, "}": 1197, ">": 25137}
 part1, part2 = 0, []
 
-for line in fileinput.input():
+for line in open(0).read().splitlines():
     stack = deque()
-    for c in line.strip():
+    for c in line:
         if c in "([{<":
             stack.appendleft(pairs[c])
         elif c != stack.popleft():

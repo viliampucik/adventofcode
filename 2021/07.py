@@ -1,7 +1,5 @@
 #!/usr/bin/env python
-import sys
-
-c = sorted(map(int, sys.stdin.read().split(",")))
+c = sorted(map(int, open(0).read().split(",")))
 median, mean = c[len(c) // 2], sum(c) // len(c)
 # fmt:off
 print(sum(

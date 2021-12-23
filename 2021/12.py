@@ -1,12 +1,11 @@
 #!/usr/bin/env python
 from collections import defaultdict, deque
 from functools import cache
-import fileinput
 
 caves = defaultdict(list)
 
-for line in fileinput.input():
-    a, b = line.strip().split("-")
+for line in open(0).read().splitlines():
+    a, b = line.split("-")
     caves[a].append(b)
     caves[b].append(a)
 

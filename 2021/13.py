@@ -1,7 +1,5 @@
 #!/usr/bin/env python
-import sys
-
-positions, folds = sys.stdin.read().split("\n\n")
+positions, folds = open(0).read().split("\n\n")
 image, ab, first = set(), [0, 0], True
 
 for position in positions.splitlines():
