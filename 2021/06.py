@@ -3,7 +3,7 @@ from collections import deque
 
 d = deque([0] * 9)
 
-for i in map(int, open(0).read().split(",")):
+for i in map(int, input().split(",")):
     d[i] += 1
 
 for part in (80, 256 - 80):
