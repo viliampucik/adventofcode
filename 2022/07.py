@@ -18,5 +18,5 @@ for line in open(0).read().splitlines():
             for p in accumulate(path):
                 dirs[p] += int(size)
 
-print(sum(size for size in dirs.values() if size <= 100000))
+print(sum(size for size in dirs.values() if size <= 100_000))
 print(min(size for size in dirs.values() if size >= dirs["/"] - 40_000_000))
