@@ -1,13 +1,12 @@
 #!/usr/bin/env pypy3
 import re
-import sys
 from array import array
 
 r = re.compile(r"(.+) (\d+),(\d+) through (\d+),(\d+)")
 lights1 = array("B", [0] * 1_000_000)
 lights2 = array("I", [0] * 1_000_000)
 
-for line in sys.stdin:
+for line in open(0):
     action, *numbers = r.match(line).groups()
     col_min, row_min, col_max, row_max = map(int, numbers)
 

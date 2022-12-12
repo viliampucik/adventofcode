@@ -1,6 +1,5 @@
 #!/usr/bin/env python
-floor = 0
-basement = None
+floor, basement = 0, None
 
 for i, c in enumerate(input()):
     floor += 1 if c == "(" else -1

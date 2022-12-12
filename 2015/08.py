@@ -1,10 +1,7 @@
 #!/usr/bin/env python
-import sys
-
 s1 = s2 = 0
 
-for line in sys.stdin:
-    line = line.strip()
+for line in open(0).read().splitlines():
     s1 += len(line) - len(eval(line))
     s2 += 2 + line.count("\\") + line.count('"')
 
