@@ -1,11 +1,10 @@
 #!/usr/bin/env python
-import sys
 from collections import Counter
 
 ing_counts = Counter()
 alg_ings = {}  # possible allergen -> ingredients candidates
 
-for line in sys.stdin.read().splitlines():
+for line in open(0).read().splitlines():
     ings, algs = line.split(" (contains ")
     ings, algs = ings.split(), algs[:-1].split(", ")
 

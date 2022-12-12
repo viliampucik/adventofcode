@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-import sys
 from collections import defaultdict
 
 
@@ -16,7 +15,7 @@ def solve(seats, neighbors, limit):
         seats = new_seats
 
 
-lines = sys.stdin.read().splitlines()
+lines = open(0).read().splitlines()
 size = len(lines)  # grid width and height are the same
 # fmt: off
 seats = {

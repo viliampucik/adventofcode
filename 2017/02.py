@@ -2,7 +2,7 @@
 # fmt:off
 s = [
     [int(i) for i in l.split()]
-    for l in open(0).readlines()
+    for l in open(0).read().splitlines()
 ]
 print(sum(max(r) - min(r) for r in s))
 print(sum(

@@ -1,8 +1,7 @@
 #!/usr/bin/env python
-import sys
 from math import prod
 
-timestamp, busses = sys.stdin.read().splitlines()
+timestamp, busses = open(0).read().splitlines()
 timestamp, busses = int(timestamp), {
     # fmt: off
     i: int(bus)
