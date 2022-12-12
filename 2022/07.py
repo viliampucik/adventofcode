@@ -1,22 +1,22 @@
 #!/usr/bin/env python
 from collections import defaultdict
+from itertools import accumulate
 
-lines = map(str.split, open(0).read().splitlines())
-path, dirs = [], defaultdict(int)
+dirs = defaultdict(int)
 
-for l in lines:
-    if l[0] == "$":
-        if l[1] == "cd":
-            if l[2] == "..":
-                path.pop()
-            else:
-                path.append(l[2])
-    elif l[0] != "dir":
-        for i in range(len(path)):
-            dirs[tuple(path[: i + 1])] += int(l[0])
+for line in open(0).read().splitlines():
+    match line.split():
+        case "$", "cd", "/":
+            path = ["/"]
+        case "$", "cd", "..":
+            path.pop()
+        case "$", "cd", dir:
+            path.append(dir + "/")
+        case "$" | "dir", *_:
+            continue
+        case size, _:
+            for p in accumulate(path):
+                dirs[p] += int(size)
 
 print(sum(size for size in dirs.values() if size <= 100000))
-
-required = 30000000 - (70000000 - dirs[("/",)])
-
-print(min(size for size in dirs.values() if size >= required))
+print(min(size for size in dirs.values() if size >= dirs["/"] - 40_000_000))
