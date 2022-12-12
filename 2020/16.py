@@ -1,13 +1,12 @@
 #!/usr/bin/env python
 import re
-import sys
 
-raw_rules, your_ticket, nearby_tickets = sys.stdin.read().strip().split("\n\n")
+raw_rules, your_ticket, nearby_tickets = open(0).read().split("\n\n")
 regexp = re.compile(r"([^:]+): (\d+)-(\d+) or (\d+)-(\d+)")
 rules = []
 
 for line in raw_rules.splitlines():
-    (field, lo1, hi1, lo2, hi2) = regexp.fullmatch(line).groups()
+    field, lo1, hi1, lo2, hi2 = regexp.fullmatch(line).groups()
     rules.append((field, int(lo1), int(hi1), int(lo2), int(hi2)))
 
 error_rate = 0
