@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 from collections import deque
-from math import gcd, prod
+from math import lcm, prod
 from operator import floordiv, mod
 
 ITEMS, OPER, TEST, A, B = range(5)
@@ -35,5 +35,4 @@ monkeys = [
 ]
 
 print(solve(monkeys, 20, floordiv, 3))
-tests = [m[TEST] for m in monkeys]
-print(solve(monkeys, 10_000, mod, prod(tests) // gcd(*tests)))  # Use least common multiple
+print(solve(monkeys, 10_000, mod, lcm(*(m[TEST] for m in monkeys))))  # Use least common multiple
