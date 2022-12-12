@@ -1,28 +1,14 @@
 #!/usr/bin/env python
-cycle, x, signal, pos, crt = 0, 1, 0, 0, [" "] * 40 * 6
+x, signal, crt = 1, 0, ""
 
+for cycle, ins in enumerate(open(0).read().split(), start=1):
+    signal += cycle * x if cycle % 40 == 20 else 0
+    crt += "#" if (cycle - 1) % 40 - x in (-1, 0, 1) else "."
 
-def step():
-    global cycle, signal, pos
-
-    cycle += 1
-    if cycle in (20, 60, 100, 140, 180, 220):
-        signal += cycle * x
-
-    if pos % 40 in (x - 1, x, x + 1):
-        crt[pos] = "#"
-    else:
-        crt[pos] = "."
-    pos += 1
-
-
-for line in open(0).read().splitlines():
-    step()
-    if line.startswith("addx"):
-        step()
-        x += int(line.split()[-1])
+    if ins[-1].isdigit():  # workaround for negative numbers
+        x += int(ins)
 
 print(signal)
 
 for i in range(0, len(crt), 40):
-    print("".join(crt[i : i + 40]))
+    print(crt[i : i + 40])
