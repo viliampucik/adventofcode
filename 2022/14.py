@@ -2,6 +2,7 @@
 from itertools import pairwise
 from collections import deque
 
+
 # Kudos to https://www.reddit.com/r/adventofcode/comments/zli1rd/comment/j061f6z
 def solve(check, path=deque([500])):
     while True:

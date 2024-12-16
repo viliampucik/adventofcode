@@ -14,7 +14,9 @@ def solve(password):
 
         for suffix in product(letters[letters.index(password[-i]) + 1 :], *([letters] * (i - 1))):
             candidate = prefix + "".join(suffix)
-            if r.search(candidate) and any(candidate[j : j + 3] in triplets for j in range(len(candidate) - 2)):
+            if r.search(candidate) and any(
+                candidate[j : j + 3] in triplets for j in range(len(candidate) - 2)
+            ):
                 found = candidate
                 break
 
