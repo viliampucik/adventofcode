@@ -11,17 +11,16 @@ def powerset(s):
     )
 
 
+table = str.maketrans('1X', '01')
 m1 = {}
 m2 = {}
-mask = mask_and = mask_or = mask_not = offsets = None
 
 for line in fileinput.input():
     key, value = line.strip().split(" = ")
     if key == "mask":
         mask = value
-        mask_and = int(mask.replace("1", "0").replace("X", "1"), 2)
-        mask_or = int(mask.replace("X", "0"), 2)
-        mask_not = ~mask_and
+        mask_clear = int(mask.translate(table), 2)
+        mask_set = int(mask.replace("X", "0"), 2)
         offsets = [
             sum(x)
             for x in powerset([
@@ -31,12 +30,11 @@ for line in fileinput.input():
             ])
         ]
     else:
-        address = int(key[4:-1])
-        value = int(value)
+        address, value = int(key[4:-1]), int(value)
 
-        m1[address] = value & mask_and | mask_or
+        m1[address] = value & mask_clear | mask_set
 
-        address &= mask_not
+        address = address & ~mask_clear | mask_set
         for offset in offsets:
             m2[address | offset] = value
 
