@@ -9,7 +9,7 @@ s1 = 0
 s2 = 0
 
 for line in fileinput.input():
-    (low, high, letter, password) = p.match(line.strip()).groups()
+    low, high, letter, password = p.match(line.strip()).groups()
     low, high = int(low), int(high)
 
     if low <= password.count(letter) <= high:
