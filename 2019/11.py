@@ -114,13 +114,10 @@ code = [int(i) for i in next(fileinput.input()).strip().split(",")]
 print(len(compute(code[:], False)))
 
 panels = compute(code[:], True)
+reals = [int(i.real) for i in panels.keys()]
+imags = [int(i.imag) for i in panels.keys()]
 
-fx = int(min(i.real for i in panels.keys()))
-fy = int(min(i.imag for i in panels.keys()))
-tx = int(max(i.real for i in panels.keys()))
-ty = int(max(i.imag for i in panels.keys()))
-
-for i in range(ty, fy - 1, -1):
-    for j in range(fx, tx + 1):
+for i in range(max(imags), min(imags) - 1, -1):
+    for j in range(min(reals), max(reals) + 1):
         print("#" if panels[complex(j, i)] == 1 else " ", end="")
     print()
