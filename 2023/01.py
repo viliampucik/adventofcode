@@ -3,24 +3,19 @@ import re
 
 lines = open(0).read().splitlines()
 # fmt:off
-print(sum(
-    x[0] * 10 + x[-1]
-    for line in lines
-    for x in [[int(i) for i in line if i.isdigit()]]
-))
-
-# Alternative and probably faster solution
-# print(sum(
-#     next(int(i) for i in line if i.isdigit()) * 10 +
-#     next(int(i) for i in reversed(line) if i.isdigit())
-#     for line in lines
-# ))
-
 digits = {"1": 1, "2": 2, "3": 3, "4": 4, "5": 5, "6": 6, "7": 7, "8": 8, "9": 9, "one": 1, "two": 2, "three": 3, "four": 4, "five": 5, "six": 6, "seven": 7, "eight": 8, "nine": 9}
-r = re.compile(rf"(?=({ '|'.join(digits.keys()) }))")
+# fmt:on
+keys = "|".join(digits.keys())
 
-print(sum(
-    digits[x[0]] * 10 + digits[x[-1]]
-    for line in lines
-    for x in [r.findall(line)]
-))
+
+def solve(lines, r_first, r_last):
+    return sum(
+        # fmt:off
+        digits[r_first.search(line)[1]] * 10 + digits[r_last.search(line)[1]]
+        for line in lines
+        # fmt:on
+    )
+
+
+print(solve(lines, re.compile(r"(\d)"), re.compile(r".*(\d)")))
+print(solve(lines, re.compile(rf"({keys})"), re.compile(rf".*({keys})")))
