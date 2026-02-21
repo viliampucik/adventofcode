@@ -1,11 +1,16 @@
 #!/usr/bin/env python
 import sys
 
-keys = list(map(int, sys.stdin.read().splitlines()))
-subject, modulus, value, loop = 7, 20201227, 1, 1
+card, door = list(map(int, sys.stdin.read().splitlines()))
+subject, modulus, loop = 7, 20201227, 0
 
-while (value := (value * subject) % modulus) not in keys:
+# Baby-Step Giant-Step Algorithm
+n = int(card ** 0.5)
+babies = {pow(subject, j, modulus): j for j in range(n + 1)}
+# Fermat’s Little Theorem
+fermat = pow(subject, n * (modulus - 2), modulus)
+
+while (card := (card * fermat) % modulus) not in babies.keys():
     loop += 1
 
-subject = keys[keys.index(value) - 1]  # use the next key
-print(pow(subject, loop, modulus))
+print(pow(door, loop * n + babies[card], modulus))
