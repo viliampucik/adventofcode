@@ -16,7 +16,10 @@ count_present = 0
 count_valid = 0
 
 for line in sys.stdin.read().split("\n\n"):
-    passport = dict(l.split() for l in line.split())
+    passport = dict(l.split(":") for l in line.split())
+
+    # if not passport.keys() >= fields.keys():
+    #     continue
 
     present = True
     valid = True
