@@ -39,20 +39,18 @@ for ticket in nearby_tickets.splitlines()[1:]:
 
 print(error_rate)
 
+total = 1
 singles = set()
+your_ticket = [
+    int(number) for number in your_ticket.splitlines()[-1].split(",")
+]
 while len(singles) != rules_count:
-    for col in cols:
-        if len(col) == 1:
-            singles |= col
-        else:
+    for i, col in enumerate(cols):
+        if len(col) > 1:
             col -= singles
+        elif len(col) == 1:
+            singles |= col
+            if rules[col.pop()][0].startswith("departure"):
+                total *= your_ticket[i]
 
-your_ticket = map(int, your_ticket.splitlines()[-1].split(","))
-
-print(
-    prod(
-        number
-        for col, number in zip(cols, your_ticket)
-        if rules[col.pop()][0].startswith("departure")
-    )
-)
+print(total)
