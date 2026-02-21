@@ -1,10 +1,8 @@
 #!/usr/bin/env python
-import fileinput
-
 part1 = part2 = 0
 
-for line in fileinput.input():
-    signals, output = line.strip().split(" | ")
+for line in open(0).read().splitlines():
+    signals, output = line.split(" | ")
 
     # fmt:off
     d = {

@@ -1,8 +1,7 @@
 #!/usr/bin/env python
 from itertools import chain
-import sys
 
-numbers, *data = sys.stdin.read().strip().split("\n\n")
+numbers, *data = open(0).read().strip().split("\n\n")
 
 boards = []
 for board in data:
@@ -19,7 +18,7 @@ drawn, remaining = set(), set(range(len(boards)))
 for number in map(int, numbers.split(",")):
     drawn.add(number)
 
-    for i in set(remaining):
+    for i in remaining.copy():
         if any(line <= drawn for line in boards[i]):
             remaining.remove(i)
 

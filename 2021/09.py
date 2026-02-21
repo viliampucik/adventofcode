@@ -1,8 +1,7 @@
 #!/usr/bin/env python
 from math import prod
-import fileinput
 
-m = [list(map(int, line.strip())) for line in fileinput.input()]
+m = [list(map(int, line)) for line in open(0).read().splitlines()]
 h, w, part1, part2 = len(m), len(m[0]), 0, []
 
 for r in range(h):

@@ -1,7 +1,5 @@
 #!/usr/bin/env python
-import sys
-
-numbers = sys.stdin.read().splitlines()
+numbers = open(0).read().splitlines()
 # fmt:off
 gamma = "".join(
     "10" if bits.count("1") > len(bits) / 2 else "01"

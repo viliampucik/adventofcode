@@ -1,10 +1,9 @@
 #!/usr/bin/env python
 from collections import deque
-import sys
 
 d = deque([0] * 9)
 
-for i in map(int, sys.stdin.read().split(",")):
+for i in map(int, open(0).read().split(",")):
     d[i] += 1
 
 for part in (80, 256 - 80):

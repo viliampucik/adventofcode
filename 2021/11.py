@@ -1,10 +1,8 @@
 #!/usr/bin/env python
-import sys
-
 # fmt:off
 octopuses = {
     complex(row, col): int(number)
-    for row, line in enumerate(sys.stdin.read().splitlines())
+    for row, line in enumerate(open(0).read().splitlines())
     for col, number in enumerate(line)
 }
 # fmt:on
