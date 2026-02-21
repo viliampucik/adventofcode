@@ -15,7 +15,12 @@ def game(player1, player2, recursive):
         (card1, *player1), (card2, *player2) = player1, player2
 
         if recursive and len(player1) >= card1 and len(player2) >= card2:
-            player1win = game(player1[:card1], player2[:card2], recursive)[0]
+            cards1, cards2 = player1[:card1], player2[:card2]
+            if (cards1_max := max(cards1)) > max(cards2) and \
+               (cards1_max > (len(cards1) + len(cards2) - 2)):
+                player1win = True
+            else:
+                player1win = game(cards1, cards2, recursive)[0]
         else:
             player1win = card1 > card2
 
