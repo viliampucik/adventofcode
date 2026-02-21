@@ -1,39 +1,44 @@
 #!/usr/bin/env python
 import networkx as nx
 
-
-def path(graph, source, target):
-    try:
-        return nx.shortest_path_length(graph, source, target)
-    except:
-        return -1
-
-
-# fmt: off
 t = {
-    complex(r, c): ord(s)
+    k: ord(v) - ord("a")
     for r, line in enumerate(open(0))
-    for c, s in enumerate(line.strip())
+    for c, v in enumerate(line.strip())
+    for k in [complex(r, c)]
+    if (v == "S" and (s := k)) or (v == "E" and (e := k)) or True
 }
-# fmt: on
-s = next(k for k, v in t.items() if v == ord("S"))
-e = next(k for k, v in t.items() if v == ord("E"))
+t[s], t[e] = 0, ord("z") - ord("a")
+G = nx.DiGraph(
+    incoming_graph_data=(
+        (k, n)
+        for k, v in t.items()
+        for d in (-1, 1, -1j, 1j)
+        if (n := k + d) in t and t[n] - v <= 1
+    )
+)
+paths = list(nx.single_target_shortest_path_length(G, e))
+print(next(v for k, v in paths if k == s))
+print(min(v for k, v in paths if t[k] == 0))
 
-t[s] = ord("a")
-t[e] = ord("z")
-
-G = nx.DiGraph()
-
-for k, v in t.items():
-    for d in (-1, 1, -1j, 1j):
-        if (n := k + d) in t:
-            if t[n] - v <= 1:
-                G.add_edge(k, n)
-
-print(nx.shortest_path_length(G, s, e))
-# fmt: off
-print(min(
-    l
-    for k, v in t.items()
-    if v == ord("a") and (l := path(G, k, e)) >= 0
-))
+## BFS example, but slower than networkx
+#
+# from collections import deque
+#
+#
+# def bfs(t, s, e):
+#     queue, seen = deque([(s, 0)]), set([s])
+#
+#     while queue:
+#         k, size = queue.popleft()
+#
+#         if k == e:
+#             return size
+#
+#         for d in (-1, 1, -1j, 1j):
+#             if (n := k + d) in t and n not in seen and t[n] - t[k] <= 1:
+#                 queue.append((n, size + 1))
+#                 seen.add(n)
+#
+#
+# print(bfs(t, s, e))
