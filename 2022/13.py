@@ -26,17 +26,14 @@ packets = [
 ]
 
 print(sum(
-    i
-    for i, (left, right) in enumerate(zip(packets[::2], packets[1::2]), start=1)
+    i + 1
+    for i, (left, right) in enumerate(zip(packets[::2], packets[1::2]))
     if cmp(left, right) <= 0
 ))
 
 two_six = [[[2]], [[6]]]
 print(prod(
-    i
-    for i, packet in enumerate(
-        sorted(packets + two_six, key=cmp_to_key(cmp)),
-        start=1
-    )
+    i + 1
+    for i, packet in enumerate(sorted(packets + two_six, key=cmp_to_key(cmp)))
     if packet in two_six
 ))
