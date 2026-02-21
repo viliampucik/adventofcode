@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 import sys
-from collections import defaultdict
+from collections import Counter
 from itertools import product
 
 
@@ -15,13 +15,12 @@ def solve(lines, dimensions):
     }
 
     for _ in range(6):
-        neighbors = defaultdict(int)
-
         # Kudos to https://github.com/dionyziz/advent-of-code/blob/master/2020/17/17.py
-        for cube in cubes:
-            for coordinate in coordinates:
-                neighbor = tuple(sum(x) for x in zip(cube, coordinate))
-                neighbors[neighbor] += 1  # possibility of a future neighbor
+        neighbors = Counter(
+            tuple(sum(x) for x in zip(cube, coordinate))
+            for cube in cubes
+            for coordinate in coordinates
+        )  # possibility of a future neighbor
 
         cubes = {
             neighbor
