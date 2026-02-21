@@ -1,7 +1,9 @@
 #!/usr/bin/env pypy3
 # Kudos to https://github.com/taddeus/advent-of-code/blob/master/2020/23_cups.py
+from array import array
+
 def move(cups, moves, pad):
-    nex = list(range(1, pad + 2))
+    nex = array("I", range(1, pad + 2))
 
     for label, next_label in zip(cups, cups[1:] + cups[:1]):
         nex[label] = next_label
