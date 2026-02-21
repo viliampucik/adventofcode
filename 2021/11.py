@@ -35,7 +35,7 @@ while step := step + 1:
                 if octopuses[x] > 9:
                     flashing.add(x)
 
-    if part2 is None and sum(octopuses.values()) == 0:
+    if part2 is None and len(flashed) == len(octopuses):
         part2 = step
 
     if step <= 100:
