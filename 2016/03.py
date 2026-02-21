@@ -18,7 +18,7 @@ count = 0
 
 for i in l:
     for j in range(0, len(i), 3):
-        a, b, c = i[j:j+3]
+        a, b, c = i[j : j + 3]
         if a + b > c and a + c > b and b + c > a:
             count += 1
 

@@ -26,6 +26,7 @@ for line in fileinput.input():
     if tls:
         tls_count += 1
 
+    # fmt: off
     if re.search(r"""([^\[\]])(?!\1)([^\[\]])\1  # ABA
                      [^\[\]]*                    # *
                      (?:\[[^\[\]]*\][^\[\]]*)*   # optional [*]* sections
@@ -39,6 +40,7 @@ for line in fileinput.input():
                      [^\[\]]*                    # *
                      \2\1\2                      # BAB""", line, re.X):
         ssl_count += 1
+    # fmt: on
 
 print(tls_count)
 print(ssl_count)

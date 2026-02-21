@@ -16,10 +16,7 @@ for line in fileinput.input():
 
 @cache
 def inside(name):
-    return sum(
-        count + count * inside(bag)
-        for bag, count in bags_in[name].items()
-    )
+    return sum(count + count * inside(bag) for bag, count in bags_in[name].items())
 
 
 @cache
@@ -34,6 +31,7 @@ print(len(outside("shiny gold")))
 print(inside("shiny gold"))
 
 # Nonrecursive alternatives, faster then non-cached recursive ones, but slower than cached ones
+
 
 def search_inside(name):
     colors, total = deque([(name, 1)]), -1  # compensate the total count for the "name" bag itself

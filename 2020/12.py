@@ -2,10 +2,10 @@
 import fileinput
 
 
-def solve(instructions, waypoint=1+0j):
+def solve(instructions, waypoint=1 + 0j):
     actions = {"N": 1j, "S": -1j, "E": 1, "W": -1}
-    position = 0+0j
-    waypoint_mode = waypoint != 1+0j
+    position = 0 + 0j
+    waypoint_mode = waypoint != 1 + 0j
 
     for action, value in instructions:
         if action == "L":
@@ -24,4 +24,4 @@ def solve(instructions, waypoint=1+0j):
 
 instructions = [(line[0], int(line[1:])) for line in fileinput.input()]
 print(solve(instructions))
-print(solve(instructions, 10+1j))
+print(solve(instructions, 10 + 1j))

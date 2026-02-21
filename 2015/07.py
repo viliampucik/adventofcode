@@ -14,18 +14,19 @@ def solve(wire):
     if len(ins) == 3:
         return ops[ins[1]](solve(ins[0]), solve(ins[2]))
     elif len(ins) == 2:
-        return ~ solve(ins[1]) & 65535
+        return ~solve(ins[1]) & 65535
     else:
         return solve(ins[0])
 
 
 ops = {"AND": iand, "OR": ior, "RSHIFT": rshift, "LSHIFT": lshift}
+# fmt: off
 wires = {
     wire: ins.split()
     for line in sys.stdin
     for ins, wire in [line.strip().split(" -> ")]
 }
-
+# fmt: on
 print(a := solve("a"))
 wires["b"] = [str(a)]
 solve.cache_clear()

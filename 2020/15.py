@@ -12,7 +12,8 @@ for i, number in enumerate(numbers):
     age[number] = i + 1
 
 for i in range(len(numbers), size):
-    if i == 2020: print(last)
+    if i == 2020:
+        print(last)
     # age[last], last = i, i - age.get(last, i)  # slow dict alternative
     previous = age[last]
     age[last], last = i, i - previous if previous else 0

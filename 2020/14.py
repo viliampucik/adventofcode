@@ -6,12 +6,14 @@ from itertools import chain, combinations
 def powerset(s):
     "powerset([1,2,3]) --> () (1,) (2,) (3,) (1,2) (1,3) (2,3) (1,2,3)"
     return chain.from_iterable(
+        # fmt: off
         combinations(s, r)
         for r in range(len(s) + 1)
+        # fmt: on
     )
 
 
-table = str.maketrans('1X', '01')
+table = str.maketrans("1X", "01")
 m1 = {}
 m2 = {}
 
@@ -22,12 +24,14 @@ for line in fileinput.input():
         mask_clear = int(mask.translate(table), 2)
         mask_set = int(mask.replace("X", "0"), 2)
         offsets = [
+            # fmt: off
             sum(x)
             for x in powerset([
                 1 << (35 - i)  # 2 ** (35 - 1)
                 for i, bit in enumerate(mask)
                 if bit == "X"
             ])
+            # fmt: on
         ]
     else:
         address, value = int(key[4:-1]), int(value)

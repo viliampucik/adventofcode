@@ -18,7 +18,7 @@ def solve(seats, neighbors, limit):
 
 lines = sys.stdin.read().splitlines()
 size = len(lines)  # grid width and height are the same
-
+# fmt: off
 seats = {
     row + col*1j: False
     for row, line in enumerate(lines)
@@ -43,7 +43,7 @@ neighbors_direct = {
     ]
     for seat in seats
 }
-
+# fmt: on
 neighbors_adjacent = defaultdict(list)
 for seat in seats:
     for direction in directions:

@@ -24,7 +24,7 @@ while len(singles) != len(alg_ings):
             ings -= singles
         else:  # len(ings) == 1
             singles |= ings
-
+# fmt: off
 print(sum(
     count
     for ing, count in ing_counts.items()
@@ -35,3 +35,4 @@ print(",".join(
     alg_ings[alg].pop()
     for alg in sorted(alg_ings)
 ))
+# fmt: on

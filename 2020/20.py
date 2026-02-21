@@ -11,6 +11,7 @@ def add(tiles, borders, name, lines, include_flipped=True):
 
     tile_borders = {}
 
+    # fmt: off
     # Start with flipped sides first. If non-flipped side mirrors its flipped side,
     # the later will overwrite the previous.
     if include_flipped:
@@ -27,6 +28,7 @@ def add(tiles, borders, name, lines, include_flipped=True):
         left:   (LEFT,   NO_FLIP),
         right:  (RIGHT,  NO_FLIP),
     }
+    # fmt: on
 
     tiles[name], borders[name] = lines, tile_borders
 
@@ -76,9 +78,9 @@ for tile in sys.stdin.read().strip().split("\n\n"):
 
 stack = set(borders.keys())
 center = stack.pop()  # Pick a random tile as a center
-image = {+0+0j: center}
+image = {+0 + 0j: center}
 tile_size = len(tiles[center])
-add(tiles, borders, center, tiles[center], False) # And assume it does not need flipping
+add(tiles, borders, center, tiles[center], False)  # And assume it does not need flipping
 
 min_row = max_row = min_col = max_col = 0
 
@@ -105,6 +107,7 @@ while stack:
     transform(tiles, borders, candidate, matching_border, matching_side)
     del borders[source][matching_border]
 
+# fmt: off
 print(prod(
     image[c + r * 1j]
     for r in (min_row, max_row)
@@ -119,7 +122,7 @@ grid = [
     for row in range(max_row, min_row-1, -1)
     for i in range(1, tile_size-1)
 ]
-
+# fmt: on
 monster = (
     "                  # ",
     "#    ##    ##    ###",
@@ -128,10 +131,7 @@ monster = (
 padding = len(grid[0]) - len(monster[0]) + len("\n")
 # Regex search is elegant and fast, however because of overlapping strings
 # lookahead approach needs to be used
-r = re.compile(
-    "(?=(" + f".{{{padding}}}".join(monster).replace(" ", ".") + "))",
-    re.DOTALL
-)
+r = re.compile("(?=(" + f".{{{padding}}}".join(monster).replace(" ", ".") + "))", re.DOTALL)
 
 monsters = 0
 
