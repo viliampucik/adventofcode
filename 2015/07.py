@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-import sys
 from functools import cache
 from operator import iand, ior, lshift, rshift
 
@@ -23,7 +22,7 @@ ops = {"AND": iand, "OR": ior, "RSHIFT": rshift, "LSHIFT": lshift}
 # fmt: off
 wires = {
     wire: ins.split()
-    for line in sys.stdin
+    for line in open(0)
     for ins, wire in [line.strip().split(" -> ")]
 }
 # fmt: on

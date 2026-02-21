@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-
 orientation = {"^": 1j, "v": -1j, ">": 1, "<": -1}
 location, locations = 0, [0, 0]
 houses1, houses2 = set((location,)), set(locations)

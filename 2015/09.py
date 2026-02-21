@@ -1,12 +1,10 @@
 #!/usr/bin/env python
-import sys
 from collections import defaultdict
 from itertools import permutations
 
 cities = defaultdict(dict)
 
-for line in sys.stdin:
-    city_from, _, city_to, _, distance = line.strip().split()
+for city_from, _, city_to, _, distance in map(str.split, open(0).read().splitlines()):
     cities[city_from][city_to] = int(distance)
     cities[city_to][city_from] = int(distance)
 
