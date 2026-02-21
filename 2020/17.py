@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-import sys
 from collections import Counter
 from itertools import product
 
@@ -35,6 +34,6 @@ def solve(lines, dimensions):
     return len(cubes)
 
 
-lines = sys.stdin.read().splitlines()
+lines = open(0).read().splitlines()
 print(solve(lines, 3))
 print(solve(lines, 4))
