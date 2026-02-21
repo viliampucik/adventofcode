@@ -5,7 +5,10 @@ from itertools import chain, combinations
 
 def powerset(s):
     "powerset([1,2,3]) --> () (1,) (2,) (3,) (1,2) (1,3) (2,3) (1,2,3)"
-    return chain.from_iterable(combinations(s, r) for r in range(len(s)+1))
+    return chain.from_iterable(
+        combinations(s, r)
+        for r in range(len(s) + 1)
+    )
 
 
 m1 = {}
@@ -21,9 +24,11 @@ for line in fileinput.input():
         mask_not = ~mask_and
         offsets = [
             sum(x)
-            for x in powerset(
-                [1 << (35 - i) for i, b in enumerate(mask) if b == "X"]
-            )
+            for x in powerset([
+                1 << (35 - i)
+                for i, b in enumerate(mask)
+                if b == "X"
+            ])
         ]
     else:
         address = int(key[4:-1])
