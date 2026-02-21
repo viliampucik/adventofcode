@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-from collections import defaultdict
 import fileinput
 
 part1 = part2 = 0
