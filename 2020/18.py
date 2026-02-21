@@ -5,35 +5,41 @@ from operator import add, mul
 
 
 def same_precedence(line):
-    operations = {"+": add, "*": mul}
-    values = line.split()
-    a = int(values[0])
+    a, *values = line.split()
+    a, ivalues = int(a), iter(values)
 
-    for i in range(1, len(values)-1, 2):
-        o = operations[values[i]]
-        b = int(values[i + 1])
-        a = o(a, b)
+    for o, b in zip(ivalues, ivalues):
+        b = int(b)
+        a = add(a, b) if o == "+" else mul(a, b)
 
     return a
 
 
 def add_before_mul(line):
-    while m := re.search(r"\d+ \+ \d+", line):
-        line = line[:m.start()] \
-            + str(eval(m.group(0))) \
-            + line[m.end():]
+    regexp = re.compile(r"\d+ \+ \d+")
+    changes = 1
+
+    while changes:
+        line, changes = regexp.subn(
+            lambda m: str(eval(m.group())),
+            line
+        )
 
     return eval(line)
 
 
 def solve(lines, func):
+    regexp = re.compile(r"\([^()]+\)")
     total = 0
 
     for line in lines:
-        while m := re.search(r"\([^()]+\)", line):
-            line = line[: m.start()] \
-                + str(func(m.group()[1:-1])) \
-                + line[m.end():]
+        changes = 1
+
+        while changes:
+            line, changes = regexp.subn(
+                lambda m: str(func(m.group()[1:-1])),
+                line
+            )
 
         total += func(line)
 
