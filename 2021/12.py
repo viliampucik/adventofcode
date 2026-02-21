@@ -9,8 +9,8 @@ for line in fileinput.input():
     caves[a].append(b)
     caves[b].append(a)
 
-for skip_duplicates in True, False:
-    count, search = 0, deque((child, set(), False) for child in caves["start"])
+for duplicate in True, False:
+    count, search = 0, deque((child, set(), duplicate) for child in caves["start"])
 
     while search:
         parent, lowers, duplicate = search.popleft()
@@ -20,10 +20,9 @@ for skip_duplicates in True, False:
             continue
         elif parent.islower():
             if parent in lowers:
-                if skip_duplicates or duplicate:
+                if duplicate:
                     continue
-                else:
-                    duplicate = True
+                duplicate = True
             lowers.add(parent)
 
         search.extend((child, set(lowers), duplicate) for child in caves[parent] if child != "start")
