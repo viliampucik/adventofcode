@@ -3,25 +3,19 @@ import fileinput
 
 
 def solve(instructions, waypoint=1+0j):
+    actions = {"N": 1j, "S": -1j, "E": 1, "W": -1}
     position = 0+0j
-    actions = {
-        "N": 1j,
-        "S": -1j,
-        "E": 1,
-        "W": -1,
-        "F": waypoint,  # orientation (of waypoint)
-    }
     waypoint_mode = waypoint != 1+0j
 
     for action, value in instructions:
         if action == "L":
-            actions["F"] *= 1j**(value / 90)
+            waypoint *= pow(1j, value // 90)
         elif action == "R":
-            actions["F"] /= 1j**(value / 90)
+            waypoint *= pow(-1j, value // 90)
         elif action == "F":
-            position += actions["F"] * value
+            position += waypoint * value
         elif waypoint_mode:
-            actions["F"] += actions[action] * value
+            waypoint += actions[action] * value
         else:
             position += actions[action] * value
 
