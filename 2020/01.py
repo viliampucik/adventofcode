@@ -10,6 +10,6 @@ def solve(length):
             return prod(c)
 
 
-n = [int(line.strip()) for line in fileinput.input()]
+n = list(map(int, fileinput.input()))
 print(solve(2))
 print(solve(3))
