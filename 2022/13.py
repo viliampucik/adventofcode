@@ -1,8 +1,4 @@
 #!/usr/bin/env python
-from math import prod
-from functools import cmp_to_key
-
-
 def cmp(left, right):
     match left, right:
         case int(), list():
@@ -18,22 +14,19 @@ def cmp(left, right):
             return cmp(len(left), len(right))
 
 
-# fmt: off
-packets = [
+# fmt:off
+s1, two, six, packets = 0, 1, 2, [
     eval(line)
     for line in open(0).read().splitlines()
     if len(line)
 ]
+# fmt:on
+for i, (left, right) in enumerate(zip(packets[::2], packets[1::2])):
+    if cmp(left, right) <= 0:
+        s1 += i + 1
+    for x in left, right:
+        two += cmp(x, [[2]]) <= 0
+        six += cmp(x, [[6]]) <= 0
 
-print(sum(
-    i + 1
-    for i, (left, right) in enumerate(zip(packets[::2], packets[1::2]))
-    if cmp(left, right) <= 0
-))
-
-two_six = [[[2]], [[6]]]
-print(prod(
-    i + 1
-    for i, packet in enumerate(sorted(packets + two_six, key=cmp_to_key(cmp)))
-    if packet in two_six
-))
+print(s1)
+print(two * six)
