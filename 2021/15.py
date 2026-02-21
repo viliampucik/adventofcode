@@ -33,4 +33,8 @@ for i in 1, 5:
         yd, ym = divmod(y, width)
         data["weight"] = (m[xm][ym] + xd + yd - 1) % 9 + 1
 
-    print(nx.shortest_path_length(g, source=(0, 0), target=(i * height - 1, i * width - 1), weight="weight"))
+    print(
+        nx.shortest_path_length(
+            g, source=(0, 0), target=(i * height - 1, i * width - 1), weight="weight"
+        )
+    )

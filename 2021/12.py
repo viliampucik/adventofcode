@@ -9,6 +9,7 @@ for line in open(0).read().splitlines():
     caves[a].append(b)
     caves[b].append(a)
 
+
 # Recursive version with result caching
 @cache
 def dfs(parent, lowers, duplicate):
@@ -21,7 +22,9 @@ def dfs(parent, lowers, duplicate):
             duplicate = True
         lowers |= {parent}
 
-    return sum(dfs(child, frozenset(lowers), duplicate) for child in caves[parent] if child != "start")
+    return sum(
+        dfs(child, frozenset(lowers), duplicate) for child in caves[parent] if child != "start"
+    )
 
 
 for duplicate in True, False:
@@ -29,7 +32,11 @@ for duplicate in True, False:
 
 # Slightly slower, non recursive version with result caching
 for duplicate in True, False:
-    count, search, cache = 0, deque((child, frozenset(), duplicate, None) for child in caves["start"]), {}
+    count, search, cache = (
+        0,
+        deque((child, frozenset(), duplicate, None) for child in caves["start"]),
+        {},
+    )
 
     while search:
         parent, lowers, duplicate, start = search.popleft()
@@ -54,6 +61,10 @@ for duplicate in True, False:
                 duplicate = True
             lowers |= {parent}
 
-        search.extendleft((child, frozenset(lowers), duplicate, None) for child in caves[parent] if child != "start")
+        search.extendleft(
+            (child, frozenset(lowers), duplicate, None)
+            for child in caves[parent]
+            if child != "start"
+        )
 
     print(count)

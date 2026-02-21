@@ -2,6 +2,7 @@
 import sys
 import re
 
+# fmt:off
 fields = {
     "byr": lambda x: 1920 <= int(x) <= 2002,
     "iyr": lambda x: 2010 <= int(x) <= 2020,
@@ -11,7 +12,7 @@ fields = {
     "ecl": lambda x: x in ("amb", "blu", "brn", "gry", "grn", "hzl", "oth"),
     "pid": lambda x: re.fullmatch(r"\d{9}", x),
 }
-
+# fmt:on
 present = 0
 valid = 0
 
