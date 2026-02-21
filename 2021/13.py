@@ -12,9 +12,8 @@ for fold in folds.splitlines():
     ab[i] = j
 
     for pixel in list(image):
-        if pixel[i] >= j:
-            image.remove(pixel)
         if pixel[i] > j:
+            image.remove(pixel)
             pixel = list(pixel)
             pixel[i] = 2 * j - pixel[i]
             image.add(tuple(pixel))
