@@ -1,14 +1,12 @@
 #!/usr/bin/env python
-import fileinput
+import sys
 
-paper = 0
-ribbon = 0
+paper = ribbon = 0
 
-for line in fileinput.input():
-    a, b, c = sorted([int(i) for i in line.strip().split("x")])
-    area = [2 * a * b, 2 * a * c, 2 * b * c]
-    paper += sum(area) + min(area) // 2
-    ribbon += a + a + b + b + a * b * c
+for line in sys.stdin.read().splitlines():
+    a, b, c = sorted(map(int, line.split("x")))
+    paper += 2 * (a * b + b * c + c * a) + a * b
+    ribbon += 2 * (a + b) + a * b * c
 
 print(paper)
 print(ribbon)
