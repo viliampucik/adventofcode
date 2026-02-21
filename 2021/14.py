@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 from collections import Counter
 
-template, _, *rules = open(0).read().strip().split("\n")
+template, _, *rules = open(0).read().splitlines()
 rules = dict(rule.split(" -> ") for rule in rules)
 pairs, elements = Counter(map(str.__add__, template, template[1:])), Counter(template)
 

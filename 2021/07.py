@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-c = sorted(map(int, open(0).read().split(",")))
+c = sorted(map(int, input().split(",")))
 median, mean = c[len(c) // 2], sum(c) // len(c)
 # fmt:off
 print(sum(

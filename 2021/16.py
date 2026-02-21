@@ -38,6 +38,6 @@ def parse(line):
     return ver, total
 
 
-versions, total = parse(open(0).read().strip())
-print(versions)
+ver, total = parse(input())
+print(ver)
 print(total)
