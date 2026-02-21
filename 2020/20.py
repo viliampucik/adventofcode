@@ -12,7 +12,7 @@ def add(tiles, borders, name, lines, include_flipped=True):
     tile_borders = {}
 
     # Start with flipped sides first. If non-flipped side mirrors its flipped side,
-    # the later with overwrite the previous.
+    # the later will overwrite the previous.
     if include_flipped:
         tile_borders |= {
             top[::-1]:    (TOP,    LR_FLIP),  # flipped
