@@ -13,9 +13,8 @@ for line in raw_rules.splitlines():
 
 error_rate = 0
 rules_count = len(rules)
-cols = [
-    set(range(rules_count)) for _ in range(rules_count)
-]  # start with all rules (indexes) being valid for each column
+# start with all rules (indexes) being valid for each column
+cols = [set(range(rules_count)) for _ in range(rules_count)]
 
 for ticket in nearby_tickets.splitlines()[1:]:
     valid_ticket = True
@@ -41,9 +40,8 @@ print(error_rate)
 
 total = 1
 singles = set()
-your_ticket = [
-    int(number) for number in your_ticket.splitlines()[-1].split(",")
-]
+your_ticket = [int(number)
+               for number in your_ticket.splitlines()[-1].split(",")]
 while len(singles) != rules_count:
     for i, col in enumerate(cols):
         if len(col) > 1:
